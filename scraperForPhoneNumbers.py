@@ -11,25 +11,38 @@ def get_phone(soup):
     # except:
     #     pass
 
+    phone = []
+
     try:
-        phone = re.findall(r'\(?\b[2-9][0-9]{2}\)?[-][2-9][0-9]{2}[-][0-9]{4}\b', response.text)
+        phoneTry = re.findall(r'\(?\b[2-9][0-9]{2}\)?[-][2-9][0-9]{2}[-][0-9]{4}\b', response.text)
+        for i in phoneTry:
+            phone.append(i)
+    except:
+        pass
+
+    try:
+        phoneTry = re.findall(r'(\d\d\d\d\d\d\d\d\d\d)', response.text)
+        for i in phoneTry:
+            phone.append(i)
+    except:
+        pass
+
+    try:
+        phoneTry = re.findall(r'(\(\d\d\d\) \d\d\d-\d\d\d\d)', response.text)
+        for i in phoneTry:
+            phone.append(i)
         return phone
     except:
         pass
 
     try:
-        phone = re.findall(r'\(?\b[2-9][0-9]{2}\)?[][2-9][0-9]{2}[][0-9]{4}\b', response.text)
-        return phone
+        phoneTry = re.findall(r'\(?\b[2-9][0-9]{2}\)?[-. ]?[2-9][0-9]{2}[-. ]?[0-9]{4}\b', response.text)[-1]
+        for i in phoneTry:
+            phone.append(i)
     except:
-        pass
+        return phone
 
-    try:
-       phone = re.findall(r'\(?\b[2-9][0-9]{2}\)?[-. ]?[2-9][0-9]{2}[-. ]?[0-9]{4}\b', response.text)[-1]
-       return phone
-    except:
-        print ('Phone number not found')
-        phone = ''
-        return phone
+    return phone
 
 def get_email(soup):
     try:
@@ -47,7 +60,7 @@ def get_email(soup):
 
 phone = []
 
-url = 'http://www.usu.edu/'
+url = 'https://www.provo.org/city-services/airport'
 try:
     response = requests.get(url)
     soup = bs4.BeautifulSoup(response.text, 'html.parser')
@@ -60,7 +73,7 @@ print(phone)
 
 guestFile = open("output.csv","a")
 
-for entries in phone :
+for entries in phone:
     guestFile.write(entries)
     guestFile.write("\n")
 
